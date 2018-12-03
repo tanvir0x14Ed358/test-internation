@@ -88,12 +88,6 @@ class UserApiController extends AbstractController {
                 ->getRepository(User::class)
                 ->findAll();
 
-        if (!count($users)) {
-            throw $this->createNotFoundException(
-                    'No user found '
-            );
-        }
-
         $usersList = array('users' => $users);
         $serialized = $this->serializeObject($usersList);
 
