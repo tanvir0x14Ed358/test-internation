@@ -40,12 +40,20 @@ class UserApiController extends AbstractController {
         $user = new User();
 
         $user->setName($data->name);
-        $user->setEmail($data->email);
+        $user->setEmail($data->email);        
         $user->setPassword($data->password);
+        $user->setApiToken(uniqid());
         $user->setRoles($data->roles);
 
         foreach ($data->userGroups as $group) {
-            $userGroup = new UserGroups();
+            $userGroup = $this->getDoctrine()
+                ->getRepository(UserGroups::class)
+                ->findOneBy(["name"=>$group->name]);
+
+            if(!$userGroup){
+                $userGroup = new UserGroups();
+            }
+            
             $userGroup->setName($group->name);
             if ($userGroup) {
                 $user->addUserGroup($userGroup);
@@ -82,6 +90,7 @@ class UserApiController extends AbstractController {
 
     /**
      * @Route("/users", methods={"GET"})
+     * 
      */
     public function fetchAllUsers() {
         $users = $this->getDoctrine()
@@ -142,7 +151,7 @@ class UserApiController extends AbstractController {
         $entityManager->persist($user);
         $entityManager->flush();
 
-        $usersDetail = array('users' => $users);
+        $usersDetail = array('users' => $user);
         $serialized = $this->serializeObject($usersDetail);
         $response = new Response($serialized);
         $response->headers->set("Content-Type ", "application/json");

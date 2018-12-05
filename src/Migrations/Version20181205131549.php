@@ -8,15 +8,14 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20181203094613 extends AbstractMigration
+final class Version20181205131549 extends AbstractMigration
 {
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE user CHANGE api_token api_token VARCHAR(191) NOT NULL');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D6497BA2F5EB ON user (api_token)');
+        $this->addSql('ALTER TABLE user_groups CHANGE name name VARCHAR(191) NOT NULL');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_953F224D5E237E06 ON user_groups (name)');
     }
 
@@ -25,8 +24,7 @@ final class Version20181203094613 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('DROP INDEX UNIQ_8D93D6497BA2F5EB ON user');
-        $this->addSql('ALTER TABLE user CHANGE api_token api_token VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci');
         $this->addSql('DROP INDEX UNIQ_953F224D5E237E06 ON user_groups');
+        $this->addSql('ALTER TABLE user_groups CHANGE name name VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci');
     }
 }

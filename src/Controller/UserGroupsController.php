@@ -36,6 +36,14 @@ class UserGroupsController extends AbstractController {
         $data = json_decode($request->getContent());
         $entityManager = $this->getDoctrine()->getManager();
 
+        $group = $this->getDoctrine()
+                ->getRepository(UserGroups::class)
+                ->findOneBy(["name" => $data->name]);
+
+        if (!$group) {
+            $group = new UserGroups();
+        }
+
         $group = new UserGroups();
 
         $group->setName($data->name);
@@ -57,7 +65,7 @@ class UserGroupsController extends AbstractController {
         $group = $this->getDoctrine()
                 ->getRepository(UserGroups::class)
                 ->find($id);
-        
+
         $serialized = $this->serializeObject($group);
         $response = new Response($serialized);
         $response->headers->set("Content-Type ", "application/json");
@@ -72,7 +80,7 @@ class UserGroupsController extends AbstractController {
         $groups = $this->getDoctrine()
                 ->getRepository(UserGroups::class)
                 ->findAll();
-        
+
         $groupList = array('groups' => $groups);
         $serialized = $this->serializeObject($groupList);
 
@@ -105,7 +113,7 @@ class UserGroupsController extends AbstractController {
         $group->setName($data->name);
         $entityManager->persist($group);
         $entityManager->flush();
-        
+
         $serialized = $this->serializeObject($group);
         $response = new Response($serialized);
         $response->headers->set("Content-Type ", "application/json");
@@ -124,14 +132,14 @@ class UserGroupsController extends AbstractController {
                 ->find($id);
 
         $entityManager = $this->getDoctrine()->getManager();
-        if($group){
+        if ($group) {
             $entityManager->remove($group);
             $entityManager->flush();
         }
         $groups = $this->getDoctrine()
                 ->getRepository(UserGroups::class)
                 ->findAll();
-        
+
         $serialized = $this->serializeObject($groups);
         $response = new Response($serialized);
         $response->headers->set("Content-Type ", "application/json");

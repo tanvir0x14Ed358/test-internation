@@ -21,7 +21,7 @@ class UserGroups
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=191, unique=true)
      * @Groups("public")
      */
     private $name;
